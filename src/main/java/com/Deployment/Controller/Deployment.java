@@ -12,4 +12,9 @@ public class Deployment {
     public String check(){
         return  "Welcome to Deployment World";
     }
+
+    @GetMapping("/cd")
+    public  String cicd(){
+        return "Welcome to Cicd Pipeline";
+    }
 }

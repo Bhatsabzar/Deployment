@@ -15,7 +15,7 @@ spec:
       containers:
         - name: springboot-app
           image: deployment-springboot-app:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           env:
@@ -25,3 +25,5 @@ spec:
               value: razbas
             - name: SPRING_DATASOURCE_PASSWORD
               value: razbas
+
+
