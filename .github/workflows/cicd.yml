@@ -1,16 +1,15 @@
-name: Spring Boot CI/CD to Kubernetes
+name: CI/CD Pipeline
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
 
 jobs:
-  build-deploy:
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Set up JDK 21
@@ -18,8 +17,9 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
+          cache: maven
 
-      - name: Build JAR
+      - name: Build with Maven
         run: mvn clean package -DskipTests
 
       - name: Login to Docker Hub
@@ -28,22 +28,9 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build & Push Docker Image
-        run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/deployment-app:latest .
-          docker push ${{ secrets.DOCKER_USERNAME }}/deployment-app:latest
-
-      - name: Setup kubectl
-        uses: azure/setup-kubectl@v4
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
         with:
-          version: 'latest'
-
-      - name: Configure kubeconfig
-        run: |
-          echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > kubeconfig
-          export KUBECONFIG=$PWD/kubeconfig
-
-      - name: Deploy to Kubernetes
-        run: |
-          kubectl set image deployment/springboot-app springboot-app=${{ secrets.DOCKER_USERNAME }}/deployment-app:latest
-          kubectl rollout status deployment/springboot-app
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/springboot-app:latest
