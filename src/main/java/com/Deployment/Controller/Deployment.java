@@ -17,4 +17,9 @@ public class Deployment {
     public  String cicd(){
         return "Welcome to Cicd Pipeline";
     }
+    @GetMapping("/status")
+    public String status() {
+        return "CI/CD pipeline is working fine";
+    }
+
 }
