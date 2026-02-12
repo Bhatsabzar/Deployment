@@ -31,7 +31,7 @@ jobs:
         run: mvn  clean package
 
       - name: Build Docker image
-        run: docker build -t springboot-app:latest
+        run: docker build -t springboot-app:latest .
 
 #      # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
 #      - name: Update dependency graph
