@@ -22,4 +22,9 @@ public class Deployment {
         return "CI/CD pipeline is working fine";
     }
 
+    @GetMapping("/blr")
+    public String banglore() {
+        return "welcome to banglore whitefield";
+    }
+
 }
